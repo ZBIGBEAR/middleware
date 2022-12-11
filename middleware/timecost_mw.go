@@ -1,4 +1,4 @@
-package mw
+package middleware
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TimeCostMW(ctx context.Context, msg string, next MsgHandler) error {
+func TimeCostMW(ctx context.Context, msg string, next Handler) error {
 	fmt.Println("TimeCost before")
 	bTime := time.Now()
 	err := next(ctx, msg)
