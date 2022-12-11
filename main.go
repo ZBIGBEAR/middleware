@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"middleware/middleware"
+	middlewarechain "middleware/middleware_chain"
 	middlewarecontext "middleware/middleware_context"
 )
 
@@ -34,6 +35,24 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("===方案二 end")
+
+	// 方案三
+	fmt.Println("===方案三 begin")
+	ctx := context.Background()
+	m3 := middlewarechain.TimeCostMW(ctx, func(ctx context.Context) error {
+		PrintMsg("test")
+		return nil
+	})
+	m4 := middlewarechain.FilterMW(ctx, m3)
+	m5 := middlewarechain.LoggerMW(ctx, m4)
+	if err := m5(ctx); err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("===方案三 end")
+}
+
+func PrintMsg(msg string) {
+	fmt.Println("PrintMsg:" + msg)
 }
 
 /*
