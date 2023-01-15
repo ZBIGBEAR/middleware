@@ -5,6 +5,8 @@
 
 还有一种链式调用中间件，它的入参是next，返回值也是一个next，实现链式调用。这种函数套函数的用法不是很美观，同时也不具备什么可读性。方案三是这个方案的实现。
 
+方案四是for循环方式实现middleware
+
 # 示例
 
 ```
@@ -58,6 +60,18 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println("===方案三 end")
+
+	// 方案四
+	fmt.Println("===方案四 begin")
+	ctx = context.Background()
+	middleware4 := middlewarefor.NewMiddlewareManager(
+		middlewarefor.RecoveryMW,
+		middlewarefor.LoggerMW,
+		middlewarefor.TimeCostMW,
+	)
+
+	middleware4.Exec(ctx)
+	fmt.Println("===方案四 end")
 }
 
 func PrintMsg(msg string) {
@@ -93,4 +107,11 @@ TimeCostMW:cost 6045
 FinlterMW end
 LoggerMW end 
 ===方案三 end
+===方案四 begin
+2023/01/15 15:27:09 [RecoveryMW] befor
+2023/01/15 15:27:09 [LoggerMW] befor
+2023/01/15 15:27:09 [TimeCostMW] cost:0.000000s
+2023/01/15 15:27:09 [LoggerMW] end
+2023/01/15 15:27:09 [RecoveryMW] end
+===方案四 end
 ```
